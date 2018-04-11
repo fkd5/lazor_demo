@@ -50,7 +50,7 @@ class Game:
         '''
         pass
 
-    def generate_boards(self):
+    def generate_boards(self, empty_board):
         '''
         Difficulty 3
 
@@ -67,7 +67,7 @@ class Game:
 
         **Returns**
 
-            None
+            *boards* list of boards with all possible combinations of blocks on boards
         '''
 
         def get_partitions(n, k):
@@ -92,7 +92,25 @@ class Game:
         boards = []
 
         # YOUR CODE HERE
-        pass
+        # We need to place different block types in all orders, so we need a list of possibilities
+        block_permutations = list(set(list(itertools.permutations(self.blocks))))
+
+        for permutation in block_permutations:
+            for p in partitions:
+                width = len(empty_board[0])
+                height = len(empty_board)
+                board = copy.deepcopy(empty_board)
+                p_count = 0
+                permutation_count = 0
+                for i in range(1, width, 2):
+                    for j in range(1, height, 2):
+                        if empty_board[i][j] == 'o' and p[p_count] == 1:
+                            board[i][j] = permutation[permutation_count]
+                            permutation_count = permutation_count + 1
+                        p_count = p_count + 1
+                boards.append(board)
+
+        return boards
 
     def set_board(self, board):
         '''
