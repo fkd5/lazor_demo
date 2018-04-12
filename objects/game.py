@@ -141,7 +141,7 @@ class Game:
         # YOUR CODE HERE
         pass
 
-    def save_board(self):
+    def save_board(self, board):
         '''
         Difficulty 2
 
@@ -181,15 +181,33 @@ class Game:
         # Loop through the boards, and "play" them
         for b_index, board in enumerate(boards):
             # Set board
-            self.set_board(board)
+            #self.set_board(board)
 
             # MAYBE MORE CODE HERE?
+            self.board = board
+            current_lasers = copy.deepcopy(self.lasers)
 
             # LOOP THROUGH LASERS
+            counter = 0
             for j, laser in enumerate(current_lasers):
-              child_laser = None
               child_laser = laser.update(self.board, self.points)
+              current_lasers = current_lasers + child_laser
+              counter = counter + 1
+              if counter > 100:
+                pass
 
             # MAYBE MORE CODE HERE?
 
             # CHECKS HERE
+            score = 0
+            for point in self.points:
+                if point.intersect = True:
+                    score = score + 1
+
+            if score == len(self.points):
+                save_board(board)
+                pass
+            else:
+                for point in self.points:
+                    point.intersect = False
+
