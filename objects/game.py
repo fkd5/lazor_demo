@@ -30,6 +30,7 @@ class Game:
         '''
         self.fname = fptr
         self.read(fptr)
+        self.blocks = []
 
     # DO SOMETHING HERE SO WE CAN PRINT A REPRESENTATION OF GAME!
 
@@ -81,6 +82,9 @@ class Game:
             '''
             for c in itertools.combinations(range(n + k - 1), k - 1):
                 yield [b - a - 1 for a, b in zip((-1,) + c, c + (n + k - 1,))]
+
+        # Find available_space
+        self.available_space =
 
         # Get the different possible block positions.  Note, due to the function we're using, we
         # skip any instance of multiple "stars in bins".
