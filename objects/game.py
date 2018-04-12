@@ -84,7 +84,14 @@ class Game:
                 yield [b - a - 1 for a, b in zip((-1,) + c, c + (n + k - 1,))]
 
         # Find available_space
-        self.available_space =
+        width = len(empty_board[0])
+        height = len(empty_board)
+        avail_space = 0
+        for i in range(1, width):
+            for j in range(1, height):
+                if empty_board[i][j] == 'o':
+                    avail_space = avail_space + 1
+        self.available_space = avail_space
 
         # Get the different possible block positions.  Note, due to the function we're using, we
         # skip any instance of multiple "stars in bins".
@@ -101,8 +108,6 @@ class Game:
 
         for permutation in block_permutations:
             for p in partitions:
-                width = len(empty_board[0])
-                height = len(empty_board)
                 board = copy.deepcopy(empty_board)
                 p_count = 0
                 permutation_count = 0
