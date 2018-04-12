@@ -8,26 +8,11 @@ class Block:
         (b) Opaque block - Absorbs the laser
         (c) See-Through block - Both reflects and lets light pass
     '''
-    def __init__(self):
+    def __init__(self, t='o'):
         '''
         Difficulty 1
 
         DONT FORGET TO COMMENT!
         '''
-        pass
-
-    def check_if_hit(self, laser)
-        # '''
-        # Difficulty 2
-
-        # A function to check if a board is hit.
-
-        # **Parameters**
-
-        #     laser: *laser*
-        #         A laser object.
-
-        # **Returns**
-
-        #     True or False
-        # '''
+        assert t is in ['A', 'B', 'C'], "not an available block type"
+        self.type = t
