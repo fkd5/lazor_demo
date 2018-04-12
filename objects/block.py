@@ -15,3 +15,19 @@ class Block:
         DONT FORGET TO COMMENT!
         '''
         pass
+
+    def check_if_hit(self, laser)
+        # '''
+        # Difficulty 2
+
+        # A function to check if a board is hit.
+
+        # **Parameters**
+
+        #     laser: *laser*
+        #         A laser object.
+
+        # **Returns**
+
+        #     True or False
+        # '''
