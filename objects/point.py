@@ -14,20 +14,15 @@ class Point:
 
         self.pos=pos
 
-
+        #intersected can either be true or false 
+        #"true" means that the point has been intersected
+        #"false" means that the point has not been intersected
+        self.is_hit=intersected
         pass
 
     # MORE
     # Difficulty 1
 
-    def check.intersection(self, laser_p):
-
-        #needs to be able to check the point position against the laser position. 
-        #therefore - the laser needs to have a position
-        if self.pos === laser_p:
-            return 1
-        else:
-            return 0
 
 
 

@@ -253,7 +253,15 @@ class Game:
 
             None
         '''
-        # YOUR CODE HERE
+        f= open("board_solution","w+")
+
+        for i in range(1, len(self.emptyboard), 2):
+            line=[]
+            for j in range(1, len(self.emptyboard[0]), 2):
+                line.append(self.emptyboard[i][j])
+            f.write(line)
+
+        f.close()
         pass
 
     def run(self):
