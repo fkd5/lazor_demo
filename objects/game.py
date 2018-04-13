@@ -44,7 +44,6 @@ class Game:
         self.points=[]
         self.lasers=[]
 
-
     # DO SOMETHING HERE SO WE CAN PRINT A REPRESENTATION OF GAME!
 
     ## QUESTION : What does this mean. 
@@ -178,7 +177,7 @@ class Game:
 
         pass
 
-    def generate_boards(self):
+    def generate_boards(self, empty_board):
         '''
         Difficulty 3
 
@@ -195,7 +194,7 @@ class Game:
 
         **Returns**
 
-            None
+            *boards* list of boards with all possible combinations of blocks on boards
         '''
 
         def get_partitions(n, k):
@@ -210,6 +209,16 @@ class Game:
             for c in itertools.combinations(range(n + k - 1), k - 1):
                 yield [b - a - 1 for a, b in zip((-1,) + c, c + (n + k - 1,))]
 
+        # Find available_space
+        width = len(empty_board[0])
+        height = len(empty_board)
+        avail_space = 0
+        for i in range(1, width):
+            for j in range(1, height):
+                if empty_board[i][j] == 'o':
+                    avail_space = avail_space + 1
+        self.available_space = avail_space
+
         # Get the different possible block positions.  Note, due to the function we're using, we
         # skip any instance of multiple "stars in bins".
         partitions = [
@@ -220,7 +229,23 @@ class Game:
         boards = []
 
         # YOUR CODE HERE
-        pass
+        # We need to place different block types in all orders, so we need a list of possibilities
+        block_permutations = list(set(list(itertools.permutations(self.blocks))))
+
+        for permutation in block_permutations:
+            for p in partitions:
+                board = copy.deepcopy(empty_board)
+                p_count = 0
+                permutation_count = 0
+                for i in range(1, width, 2):
+                    for j in range(1, height, 2):
+                        if empty_board[i][j] == 'o' and p[p_count] == 1:
+                            board[i][j] = permutation[permutation_count]
+                            permutation_count = permutation_count + 1
+                        p_count = p_count + 1
+                boards.append(board)
+
+        return boards
 
     def set_board(self, board):
         '''
@@ -242,7 +267,7 @@ class Game:
         # YOUR CODE HERE
         pass
 
-    def save_board(self):
+    def save_board(self, board):
         '''
         Difficulty 2
 
@@ -290,15 +315,33 @@ class Game:
         # Loop through the boards, and "play" them
         for b_index, board in enumerate(boards):
             # Set board
-            self.set_board(board)
+            #self.set_board(board)
 
             # MAYBE MORE CODE HERE?
+            self.board = board
+            current_lasers = copy.deepcopy(self.lasers)
 
             # LOOP THROUGH LASERS
+            counter = 0
             for j, laser in enumerate(current_lasers):
-              child_laser = None
               child_laser = laser.update(self.board, self.points)
+              current_lasers = current_lasers + child_laser
+              counter = counter + 1
+              if counter > 100:
+                pass
 
             # MAYBE MORE CODE HERE?
 
             # CHECKS HERE
+            score = 0
+            for point in self.points:
+                if point.intersect = True:
+                    score = score + 1
+
+            if score == len(self.points):
+                save_board(board)
+                pass
+            else:
+                for point in self.points:
+                    point.intersect = False
+
