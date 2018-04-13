@@ -8,10 +8,11 @@ class Block:
         (b) Opaque block - Absorbs the laser
         (c) See-Through block - Both reflects and lets light pass
     '''
-    def __init__(self):
+    def __init__(self, t='o'):
         '''
         Difficulty 1
 
         DONT FORGET TO COMMENT!
         '''
-        pass
+        assert t is in ['A', 'B', 'C'], "not an available block type"
+        self.type = t
