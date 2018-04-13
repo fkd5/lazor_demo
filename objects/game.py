@@ -1,6 +1,9 @@
 import sys
 import copy
 import itertools
+from objects.point import Point
+from objects.block import Block
+from objects.laser import Laser
 # import the Point, Block, and Laser objects
 
 '''
@@ -43,6 +46,8 @@ class Game:
         self.emptyboard=[]
         self.points=[]
         self.lasers=[]
+
+        self.read(self.fname)
 
     # DO SOMETHING HERE SO WE CAN PRINT A REPRESENTATION OF GAME!
 
@@ -170,10 +175,10 @@ class Game:
 
         #assign the important objects/lists to the game object 
 
-        #self.blocks=blocks_list
-        #self.emptyboard=board_int_upd
-        #self.points=pts
-        #self.lasers=lsr
+        self.blocks=blocks_list
+        self.emptyboard=board_int_upd
+        self.points=pts
+        self.lasers=lsr
 
         pass
 
@@ -284,7 +289,7 @@ class Game:
             line=[]
             for j in range(1, len(self.emptyboard[0]), 2):
                 line.append(self.emptyboard[i][j])
-            f.write(line)
+            f.write(str(line))
 
         f.close()
         pass
@@ -306,7 +311,7 @@ class Game:
         # Get all boards
         print("Generating all the boards..."),
         sys.stdout.flush()
-        boards = self.generate_boards()
+        boards = self.generate_boards(self.emptyboard)
         print("Done")
         sys.stdout.flush()
 
@@ -335,11 +340,11 @@ class Game:
             # CHECKS HERE
             score = 0
             for point in self.points:
-                if point.intersect = True:
+                if point.intersect == True:
                     score = score + 1
 
             if score == len(self.points):
-                save_board(board)
+                self.save_board(board)
                 pass
             else:
                 for point in self.points:

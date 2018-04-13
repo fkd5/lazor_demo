@@ -14,5 +14,5 @@ class Block:
 
         DONT FORGET TO COMMENT!
         '''
-        assert t is in ['A', 'B', 'C'], "not an available block type"
+        assert t in ['A', 'B', 'C'], "not an available block type"
         self.type = t

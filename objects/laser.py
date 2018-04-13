@@ -1,3 +1,5 @@
+from objects.point import Point
+from objects.block import Block
 
 class Laser:
     '''
@@ -17,7 +19,7 @@ class Laser:
     # MORE
     # Difficulty 4
 
-    def update(self, board, points)
+    def update(self, board, points):
         # '''
         # A function to propagate a laser across a board.  It will interact with the blocks on the
         # board.
@@ -43,7 +45,7 @@ class Laser:
 
         # if new position is at a point, tell point it has been hit
         for point in points:
-            if new_position == point.position:
+            if new_position == point.pos:
                 point.intersected = True
 
 

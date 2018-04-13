@@ -4,7 +4,7 @@ game object, initialized by a board, and then run the game!
 '''
 
 import time
-from lazor.objects.game import Game
+from objects.game import Game
 
 
 def solve(fptr):
