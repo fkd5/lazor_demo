@@ -21,4 +21,21 @@ def solve(fptr):
 
 
 if __name__ == "__main__":
-    solve("boards/mad_1.input")
+    #solve("boards/braid_5.input")
+    # can't find solution
+    #solve("boards/diagonal_8.input")
+    # solved
+    #solve("boards/diagonal_9.input")
+    # random problem in read
+    #solve("boards/mad_1.input")
+    # solved
+    #solve("boards/mad_7.input")
+    # solution found
+    #solve("boards/showstopper_2.input")
+    # invalid starting file (fix error message)
+    #solve("boards/tricky_1.input")
+    # solution found
+    #solve("boards/vertices_1.input")
+    # solution found
+    solve("boards/vertices_2.input")
+    # random problem in read

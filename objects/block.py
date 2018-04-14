@@ -15,4 +15,4 @@ class Block:
         DONT FORGET TO COMMENT!
         '''
         assert t in ['A', 'B', 'C'], "not an available block type"
-        self.type = t
+        self.property = t

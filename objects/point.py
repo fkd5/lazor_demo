@@ -12,7 +12,7 @@ class Point:
         '''
 
 
-        self.pos=pos
+        self.pos=(pos[1], pos[0])
 
         #intersected can either be true or false 
         #"true" means that the point has been intersected

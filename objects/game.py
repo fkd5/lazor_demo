@@ -48,6 +48,8 @@ class Game:
         self.lasers=[]
 
         self.read(self.fname)
+        print(self.emptyboard)
+        self.save_board(self.emptyboard, "board_setup")
 
     # DO SOMETHING HERE SO WE CAN PRINT A REPRESENTATION OF GAME!
 
@@ -99,6 +101,7 @@ class Game:
         p=0 #initialize p and l to be zero to show that we have not yet found the point and laser lines. 
         l=0
         line_numb=0 #initialize the line number
+        #blocks_start = 0
         for line in lines:
             if "# Here we specify that we have" in line:
                 blocks_start=line_numb
@@ -111,6 +114,7 @@ class Game:
             line_numb+=1
 
         #BLOCKS PARAGRAPH
+        #assert blocks_start == 0, "invalid file input format"
         lin=blocks_start
         stop=0
         while not stop : #find the true start of the blocks
@@ -150,9 +154,9 @@ class Game:
             line=lines[i].split()
             position=(int(line[1]), int(line[2]))
             direction=(int(line[3]), int(line[4]))
-            print(position)
-            print(direction)
-            #lsr.append(Laser(position, direction))
+            #print(position)
+            #print(direction)
+            lsr.append(Laser(position, direction))
 
         #POINTS
         lin=point_start
@@ -164,14 +168,14 @@ class Game:
         pts=[]
         for i in range(point_start, point_end+1):
             position=(int(lines[i][2]), int(lines[i][4]))
-            print(position)
-            #pts.append(Point(position, 0))
+            #print(position)
+            pts.append(Point(position, 0))
 
         #close the file
         file_read.close()
 
-        print(board_int_upd)
-        print(blocks_list)
+        #print(board_int_upd)
+        #print(blocks_list)
 
         #assign the important objects/lists to the game object 
 
@@ -215,8 +219,8 @@ class Game:
                 yield [b - a - 1 for a, b in zip((-1,) + c, c + (n + k - 1,))]
 
         # Find available_space
-        width = len(empty_board[0])
-        height = len(empty_board)
+        height = len(empty_board[0])
+        width = len(empty_board)
         avail_space = 0
         for i in range(1, width):
             for j in range(1, height):
@@ -244,10 +248,11 @@ class Game:
                 permutation_count = 0
                 for i in range(1, width, 2):
                     for j in range(1, height, 2):
-                        if empty_board[i][j] == 'o' and p[p_count] == 1:
-                            board[i][j] = permutation[permutation_count]
-                            permutation_count = permutation_count + 1
-                        p_count = p_count + 1
+                        if empty_board[i][j] == 'o':
+                            if p[p_count] == 1:
+                                board[i][j] = permutation[permutation_count]
+                                permutation_count = permutation_count + 1
+                            p_count = p_count + 1
                 boards.append(board)
 
         return boards
@@ -272,7 +277,7 @@ class Game:
         # YOUR CODE HERE
         pass
 
-    def save_board(self, board):
+    def save_board(self, board, filename):
         '''
         Difficulty 2
 
@@ -283,13 +288,13 @@ class Game:
 
             None
         '''
-        f= open("board_solution","w+")
+        f= open(filename,"w+")
 
-        for i in range(1, len(self.emptyboard), 2):
+        for i in range(1, len(board), 2):
             line=[]
-            for j in range(1, len(self.emptyboard[0]), 2):
-                line.append(self.emptyboard[i][j])
-            f.write(str(line))
+            for j in range(1, len(board[0]), 2):
+                line.append(board[i][j])
+            f.write(str(line) + "\n")
 
         f.close()
         pass
@@ -318,9 +323,11 @@ class Game:
         print("Playing boards...")
         sys.stdout.flush()
         # Loop through the boards, and "play" them
+        #boards = [boards[4287]]
         for b_index, board in enumerate(boards):
+            #print(board)
             # Set board
-            #self.set_board(board)
+            # self.set_board(board)
 
             # MAYBE MORE CODE HERE?
             self.board = board
@@ -328,25 +335,35 @@ class Game:
 
             # LOOP THROUGH LASERS
             counter = 0
-            for j, laser in enumerate(current_lasers):
-              child_laser = laser.update(self.board, self.points)
-              current_lasers = current_lasers + child_laser
-              counter = counter + 1
-              if counter > 100:
-                pass
+            while len(current_lasers) > 0 and counter < 100:
+            # for j, laser in enumerate(current_lasers):
+                child_laser = current_lasers[0].update(self.board, self.points)
+                current_lasers = current_lasers + child_laser
+                counter = counter + 1
+                del current_lasers[0]
+                #print(counter)
+                # if counter > 100:
+                    # print("laser overload")
+                    # pass
 
             # MAYBE MORE CODE HERE?
 
             # CHECKS HERE
             score = 0
             for point in self.points:
-                if point.intersect == True:
+                #print(score)
+                if point.intersected == True:
                     score = score + 1
 
+            #if score > 0:
+                #print(b_index)
+                #print(board)
+
             if score == len(self.points):
-                self.save_board(board)
-                pass
+                #print(board)
+                self.save_board(board, "board_solution")
+                break
             else:
                 for point in self.points:
-                    point.intersect = False
+                    point.intersected = False
 
