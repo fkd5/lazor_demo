@@ -4,18 +4,6 @@ import itertools
 from objects.point import Point
 from objects.block import Block
 from objects.laser import Laser
-# import the Point, Block, and Laser objects
-
-'''
-
-import sys
-sys.path.append("C:\\Users\\monikawiktorzak\\Desktop\\mymodules") #what location?? 
-
-import point
-import block
-import laser
-
-'''
 
 class Game:
     '''
@@ -51,10 +39,6 @@ class Game:
         print(self.emptyboard)
         self.save_board(self.emptyboard, "board_setup")
 
-    # DO SOMETHING HERE SO WE CAN PRINT A REPRESENTATION OF GAME!
-
-    ## QUESTION : What does this mean. 
-
     def read(self, fptr):
         '''
         Difficulty 3
@@ -75,14 +59,29 @@ class Game:
         file_read=open(fptr,"r") 
         lines=file_read.readlines()
 
-        #find the start and end indeces for the board grid
         start=lines.index("GRID START\n")+1
         end=lines.index("GRID STOP\n")
         board_int=lines[start:end]
 
+        while '' in lines:
+            lines.remove('')
+        while '\n' in lines:
+            lines.remove('\n')
+
         #find the # of blocks in x and y dir
+
         y=len(board_int)
-        x=(len(board_int[0])-2)//4+1
+
+        x_interm=(len(board_int[0])-1)
+        add=0
+        if x_interm%4>0:
+            add=1
+        x=x_interm//4+add
+
+        #adjust y if its there is a blank line between the board and "grid stop"
+        if board_int[-1]=='\n':
+            y-=1
+
         #scale these #s up to include spaces for the edges of the blocks
         width=x*2+1
         length=y*2+1
@@ -115,6 +114,8 @@ class Game:
 
         #BLOCKS PARAGRAPH
         #assert blocks_start == 0, "invalid file input format"
+
+
         lin=blocks_start
         stop=0
         while not stop : #find the true start of the blocks
@@ -122,18 +123,17 @@ class Game:
                 stop=1
                 break
             lin+=1
-        blocks_start=lin
-        stop=0
-        while not stop: #find the end of the blocks
-            if "#" not in lines[lin]:
-                lin+=1
-            else:
-                stop=1
-                break
-        blocks_end=lin-1
 
+        #BLOCKS PARAGRAPH
+
+        blocks_start=lin
+        
+        while lines[lin][0] !='\n' and lines[lin][0]!= '#':
+            lin+=1
+
+        blocks_end=lin-1
         blocks_values=[] #organize the blocks into a list of letters, whose qty = the # of that type of block
-        for j in range(blocks_start, blocks_end):
+        for j in range(blocks_start, blocks_end+1):
             blocks_values.append(lines[j][0])
             blocks_values.append(lines[j][2])
         blocks_list=[]
@@ -141,7 +141,6 @@ class Game:
             f=int(blocks_values[index])
             for index2 in range(1, f+1):
                 blocks_list.append(blocks_values[index-1])
-
         #LASER
         lin=laser_start
         while lines[lin][0] is "L":
@@ -154,8 +153,6 @@ class Game:
             line=lines[i].split()
             position=(int(line[1]), int(line[2]))
             direction=(int(line[3]), int(line[4]))
-            #print(position)
-            #print(direction)
             lsr.append(Laser(position, direction))
 
         #POINTS
@@ -166,19 +163,18 @@ class Game:
 
         #organize pts into list of objects
         pts=[]
-        for i in range(point_start, point_end+1):
-            position=(int(lines[i][2]), int(lines[i][4]))
-            #print(position)
-            pts.append(Point(position, 0))
+
+        for i in range(point_start, len(lines)):
+            line1=lines[i].split()
+            if line1[0]=='P':
+                position=(int(line1[1]), int(line1[2]))
+                pts.append(Point(position, 0))
+            
 
         #close the file
         file_read.close()
 
-        #print(board_int_upd)
-        #print(blocks_list)
-
         #assign the important objects/lists to the game object 
-
         self.blocks=blocks_list
         self.emptyboard=board_int_upd
         self.points=pts
@@ -325,7 +321,6 @@ class Game:
         # Loop through the boards, and "play" them
         #boards = [boards[4287]]
         for b_index, board in enumerate(boards):
-            #print(board)
             # Set board
             # self.set_board(board)
 
