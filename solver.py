@@ -23,8 +23,8 @@ def solve(fptr):
 if __name__ == "__main__":
     #solve("boards/braid_5.input") 
     #solve("boards/diagonal_8.input")
-    solve("boards/diagonal_9.input")
-    #solve("boards/mad_1.input")
+    #solve("boards/diagonal_9.input")
+    solve("boards/mad_1.input")
     #solve("boards/mad_7.input")
     #solve("boards/showstopper_2.input")     
     #solve("boards/tricky_1.input")

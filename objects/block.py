@@ -11,8 +11,7 @@ class Block:
     def __init__(self, t='o'):
         '''
         Difficulty 1
-
-        DONT FORGET TO COMMENT!
+        
         '''
-        assert t in ['A', 'B', 'C'], "not an available block type"
+        assert t in ['A', 'B', 'C', 'a', 'b', 'c'], "not an available block type"
         self.property = t

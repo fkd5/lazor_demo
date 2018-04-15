@@ -35,10 +35,17 @@ class Game:
         self.emptyboard=[]
         self.points=[]
         self.lasers=[]
+        self.board=[]
 
         self.read(self.fname)
-        print(self.emptyboard)
+        self.set_board(self.emptyboard)
         self.save_board(self.emptyboard, "board_setup")
+
+    def __repr__(self):
+        boardstr = ""
+        for i in range(0, len(self.board)):
+            boardstr = boardstr + str(self.board[i]) + "\n"
+        return boardstr
 
     def read(self, fptr):
         '''
@@ -121,7 +128,7 @@ class Game:
             blocks_values.append(lines[j][0])
             blocks_values.append(lines[j][2])
         blocks_list=[]
-        print(blocks_values)
+        #print(blocks_values)
         for index in range(1, len(blocks_values), 2):
             f=int(blocks_values[index])
             for index2 in range(1, f+1):
@@ -134,7 +141,7 @@ class Game:
         for i in range(laser_start, laser_end+1):
             line=lines[i].split()
             position=(int(line[1]), int(line[2]))
-            print(position)
+            #print(position)
             direction=(int(line[3]), int(line[4]))
             lsr.append(Laser(position, direction))
 
@@ -145,7 +152,7 @@ class Game:
             line1=lines[i].split()
             if line1[0]=='P':
                 position=(int(line1[1]), int(line1[2]))
-                print(position)
+                #print(position)
             pts.append(Point(position, 0))
 
         #close the file
@@ -174,6 +181,11 @@ class Game:
         This becomes the "stars and bars" problem; however, we have distinguishable "stars",
         and further we restrict our system so that only one thing can be put in each bin.
 
+        **Parameters**
+
+            empty_board: *list*
+                The board given by the input file.
+
         **Returns**
 
             *boards* list of boards with all possible combinations of blocks on boards
@@ -191,7 +203,7 @@ class Game:
             for c in itertools.combinations(range(n + k - 1), k - 1):
                 yield [b - a - 1 for a, b in zip((-1,) + c, c + (n + k - 1,))]
 
-        # Find available_space
+        # Find available_space (number of possible block positions)
         height = len(empty_board[0])
         width = len(empty_board)
         avail_space = 0
@@ -210,14 +222,16 @@ class Game:
         # Now we have the partitions, we just need to make our boards
         boards = []
 
-        # YOUR CODE HERE
         # We need to place different block types in all orders, so we need a list of possibilities
         block_permutations = list(set(list(itertools.permutations(self.blocks))))
 
+        # For all permutations and all partitions, make a board and save it to boards
         for permutation in block_permutations:
             for p in partitions:
                 board = copy.deepcopy(empty_board)
+                # iterate through the partition using p_count
                 p_count = 0
+                # iterate through the permutation using permutation_count
                 permutation_count = 0
                 for i in range(1, width, 2):
                     for j in range(1, height, 2):
@@ -247,7 +261,7 @@ class Game:
 
             None
         '''
-        # YOUR CODE HERE
+        self.board = board
         pass
 
     def save_board(self, board, filename):
@@ -296,13 +310,10 @@ class Game:
         print("Playing boards...")
         sys.stdout.flush()
         # Loop through the boards, and "play" them
-        #boards = [boards[4287]]
         for b_index, board in enumerate(boards):
             # Set board
-            # self.set_board(board)
+            self.set_board(board)
 
-            # MAYBE MORE CODE HERE?
-            self.board = board
             current_lasers = copy.deepcopy(self.lasers)
 
             # LOOP THROUGH LASERS
@@ -313,26 +324,18 @@ class Game:
                 current_lasers = current_lasers + child_laser
                 counter = counter + 1
                 del current_lasers[0]
-                #print(counter)
-                # if counter > 100:
-                    # print("laser overload")
-                    # pass
 
             # CHECKS HERE
             score = 0
             for point in self.points:
-                #print(score)
                 if point.intersected == True:
                     score = score + 1
 
-            #if score > 0:
-                #print(b_index)
-                #print(board)
-
+            # Check for winning condition and if met, end game
             if score == len(self.points):
-                #print(board)
                 self.save_board(board, "board_solution")
                 break
+            # If game is not won, reset points for next attempt
             else:
                 for point in self.points:
                     point.intersected = False
