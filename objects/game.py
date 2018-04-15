@@ -147,7 +147,7 @@ class Game:
                 position=(int(line1[1]), int(line1[2]))
                 print(position)
             pts.append(Point(position, 0))
-            
+
         #close the file
         file_read.close()
 
@@ -317,8 +317,6 @@ class Game:
                 # if counter > 100:
                     # print("laser overload")
                     # pass
-
-            # MAYBE MORE CODE HERE?
 
             # CHECKS HERE
             score = 0
