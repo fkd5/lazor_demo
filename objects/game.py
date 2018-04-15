@@ -11,6 +11,7 @@ class Game:
     lasers, and points, determine all the possible different combinations
     of boards we could make, and then run through them all to try and find
     the winning one.
+
     '''
 
     def __init__(self, fptr):
@@ -59,41 +60,34 @@ class Game:
         file_read=open(fptr,"r") 
         lines=file_read.readlines()
 
+        #edit the read text so as to get rid of blank lines and lines with a #
         while '\n' in lines:
             lines.remove('\n')
-
-        lin=0
-        lines_upd=lines
-        length=len(lines)
-
-        for line in list(lines):  # iterating on a copy since removing will mess things up
+        for line in list(lines):
             if line[0] == '#':
                 lines.remove(line)
 
         #find the start and end indeces for the board grid
         start=lines.index("GRID START\n")+1
         end=lines.index("GRID STOP\n")
+        board_int=lines[start:end] #the board grid from the txt file
 
-        print(lines)
-        board_int=lines[start:end]
+        #create a modified board grid, without any spaces
         new=[]
         for i in range(0, len(board_int)):
             current_line=board_int[i].split()
             new.append(current_line)
 
-        print(new)
-        x=len(new[0])
-        y=len(new)
-        print(x)
-        print(y)
+        #find size of board
+        x=len(new[0]) #columns
+        y=len(new) #rows
 
+        #update size to include spaces for box boundaries
         width=2*x+1
         length=2*y+1
-        print(width)
-        print(length)
+
         #create the empty board (w/ "None")
         board_int_upd=[ [ None for col in range( width ) ] for row in range( length ) ]
-        print(board_int)
 
         #add the actual blocks to the new empty board matrix. keep "None" at the block boundaries. 
         for i in range(0, y):
@@ -103,57 +97,41 @@ class Game:
         #parse thorugh the lines to find the beginning of the blocks paragraph, the lasers, and the points. 
         p=0 #initialize p and l to be zero to show that we have not yet found the point and laser lines. 
         l=0
-        b=1
+        b=0
         line_numb=0 #initialize the line number
 
         for line in lines:
-            if line[0]==('A') or  line[0]=='B' or line[0]=='C':
-                if b==1:
+            if line[0]==('A') or  line[0]=='B' or line[0]=='C' and b is 0: #a line that shows blocks
                     blocks_start=line_numb-1
                     blocks_end=blocks_start
-                    b+=1
-            if line[0] is "L" and l is 0:
+                    b=1 #marks the first occurence
+            if line[0] is "L" and l is 0: #the line that shows laser
                 laser_start=line_numb
-                l=1
+                l=1 #marks the first occurence
             if line[0] is "P" and p is 0:
                 point_start=line_numb
-                p=1
+                p=1 #marks the first occurence
             line_numb+=1
 
-        lin=blocks_start
-
-        stop=0
-
-        blocks_end=laser_start-1
-
         #BLOCKS PARAGRAPH
-
-        blocks_values=[] #organize the blocks into a list of letters, whose qty = the # of that type of block
-
-
-        print("NEW NEW")
-        print(blocks_start)
-        print(blocks_end)
+        #organize the blocks into a list of letters, whose qty = the # of that type of block
+        blocks_end=laser_start-1 #blocks info ends where laser info begins
+        blocks_values=[] 
         for j in range(blocks_start+1, blocks_end+1):
             blocks_values.append(lines[j][0])
             blocks_values.append(lines[j][2])
         blocks_list=[]
         print(blocks_values)
         for index in range(1, len(blocks_values), 2):
-            print(index)
             f=int(blocks_values[index])
             for index2 in range(1, f+1):
                 blocks_list.append(blocks_values[index-1])
-        print(blocks_list)
-        #LASER
-        lin=laser_start
-        while lines[lin][0] is "L":
-            lin+=1
-        laser_end=lin
 
+        #LASER
         #organize laser into list of objects
+        laser_end=point_start-1 #laser ends where points info starts
         lsr=[]
-        for i in range(laser_start, laser_end):
+        for i in range(laser_start, laser_end+1):
             line=lines[i].split()
             position=(int(line[1]), int(line[2]))
             print(position)
@@ -161,17 +139,15 @@ class Game:
             lsr.append(Laser(position, direction))
 
         #POINTS
-        lin=point_start
-
         #organize pts into list of objects
         pts=[]
-
         for i in range(point_start, len(lines)):
             line1=lines[i].split()
             if line1[0]=='P':
                 position=(int(line1[1]), int(line1[2]))
                 print(position)
             pts.append(Point(position, 0))
+            
         #close the file
         file_read.close()
 
