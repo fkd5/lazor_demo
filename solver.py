@@ -23,15 +23,15 @@ def solve(fptr):
 if __name__ == "__main__":
     #solve("boards/braid_5.input")
     # SOLUTION FOUND !!!  
-    solve("boards/diagonal_8.input")
+    #solve("boards/diagonal_8.input")
     # solved
-    #solve("boards/diagonal_9.input")
+   # solve("boards/diagonal_9.input")
     # SOLUTION FOUND !!! 
     #solve("boards/mad_1.input")
     # solved
     #solve("boards/mad_7.input")
     # solution found
-    #solve("boards/showstopper_2.input")      FIX THIS !!!! 
+    solve("boards/showstopper_2.input")      #FIX THIS !!!! 
     # invalid starting file (fix error message)
     #solve("boards/tricky_1.input")
     # solution found

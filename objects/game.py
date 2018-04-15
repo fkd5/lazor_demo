@@ -59,51 +59,59 @@ class Game:
         file_read=open(fptr,"r") 
         lines=file_read.readlines()
 
-        start=lines.index("GRID START\n")+1
-        end=lines.index("GRID STOP\n")
-        board_int=lines[start:end]
-
-        while '' in lines:
-            lines.remove('')
         while '\n' in lines:
             lines.remove('\n')
 
-        #find the # of blocks in x and y dir
+        lin=0
+        lines_upd=lines
+        length=len(lines)
 
-        y=len(board_int)
+        for line in list(lines):  # iterating on a copy since removing will mess things up
+            if line[0] == '#':
+                lines.remove(line)
 
-        x_interm=(len(board_int[0])-1)
-        add=0
-        if x_interm%4>0:
-            add=1
-        x=x_interm//4+add
+        #find the start and end indeces for the board grid
+        start=lines.index("GRID START\n")+1
+        end=lines.index("GRID STOP\n")
 
-        #adjust y if its there is a blank line between the board and "grid stop"
-        if board_int[-1]=='\n':
-            y-=1
+        print(lines)
+        board_int=lines[start:end]
+        new=[]
+        for i in range(0, len(board_int)):
+            current_line=board_int[i].split()
+            new.append(current_line)
 
-        #scale these #s up to include spaces for the edges of the blocks
-        width=x*2+1
-        length=y*2+1
+        print(new)
+        x=len(new[0])
+        y=len(new)
+        print(x)
+        print(y)
 
+        width=2*x+1
+        length=2*y+1
+        print(width)
+        print(length)
         #create the empty board (w/ "None")
         board_int_upd=[ [ None for col in range( width ) ] for row in range( length ) ]
+        print(board_int)
 
         #add the actual blocks to the new empty board matrix. keep "None" at the block boundaries. 
         for i in range(0, y):
-            c=1
-            for j in range(0,len(board_int[0])+2, 4):
-                c+=2
-                board_int_upd[2*i+1][(j+2)//2]=board_int[i][j]
+            for j in range(0,x):
+                board_int_upd[2*i+1][j*2+1]=new[i][j]
 
         #parse thorugh the lines to find the beginning of the blocks paragraph, the lasers, and the points. 
         p=0 #initialize p and l to be zero to show that we have not yet found the point and laser lines. 
         l=0
+        b=1
         line_numb=0 #initialize the line number
-        #blocks_start = 0
+
         for line in lines:
-            if "# Here we specify that we have" in line:
-                blocks_start=line_numb
+            if line[0]==('A') or  line[0]=='B' or line[0]=='C':
+                if b==1:
+                    blocks_start=line_numb-1
+                    blocks_end=blocks_start
+                    b+=1
             if line[0] is "L" and l is 0:
                 laser_start=line_numb
                 l=1
@@ -112,35 +120,31 @@ class Game:
                 p=1
             line_numb+=1
 
-        #BLOCKS PARAGRAPH
-        #assert blocks_start == 0, "invalid file input format"
-
-
         lin=blocks_start
+
         stop=0
-        while not stop : #find the true start of the blocks
-            if "#" not in lines[lin]:
-                stop=1
-                break
-            lin+=1
+
+        blocks_end=laser_start-1
 
         #BLOCKS PARAGRAPH
 
-        blocks_start=lin
-        
-        while lines[lin][0] !='\n' and lines[lin][0]!= '#':
-            lin+=1
-
-        blocks_end=lin-1
         blocks_values=[] #organize the blocks into a list of letters, whose qty = the # of that type of block
-        for j in range(blocks_start, blocks_end+1):
+
+
+        print("NEW NEW")
+        print(blocks_start)
+        print(blocks_end)
+        for j in range(blocks_start+1, blocks_end+1):
             blocks_values.append(lines[j][0])
             blocks_values.append(lines[j][2])
         blocks_list=[]
+        print(blocks_values)
         for index in range(1, len(blocks_values), 2):
+            print(index)
             f=int(blocks_values[index])
             for index2 in range(1, f+1):
                 blocks_list.append(blocks_values[index-1])
+        print(blocks_list)
         #LASER
         lin=laser_start
         while lines[lin][0] is "L":
@@ -152,14 +156,12 @@ class Game:
         for i in range(laser_start, laser_end):
             line=lines[i].split()
             position=(int(line[1]), int(line[2]))
+            print(position)
             direction=(int(line[3]), int(line[4]))
             lsr.append(Laser(position, direction))
 
         #POINTS
         lin=point_start
-        while (lines[lin][0] is "P") and lin<len(lines)-1:
-            lin+=1
-        point_end=lin
 
         #organize pts into list of objects
         pts=[]
@@ -168,9 +170,8 @@ class Game:
             line1=lines[i].split()
             if line1[0]=='P':
                 position=(int(line1[1]), int(line1[2]))
-                pts.append(Point(position, 0))
-            
-
+                print(position)
+            pts.append(Point(position, 0))
         #close the file
         file_read.close()
 
