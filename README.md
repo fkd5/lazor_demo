@@ -12,4 +12,4 @@ a - movable reflect block<br/>
 b - movable opaque block<br/> 
 c - moveable refract block<br/> 
 
-This Lazor solver has been completed by Fiona Daley and Monika Wiktorzak. As a reminder, we are only a group of 2 for this assignment that typical contains a group of 3. 
+This Lazor solver has been completed by Fiona Daley and Monika Wiktorzak. As a reminder, we are only a group of 2 for this assignment that typically contains a group of 3. 
